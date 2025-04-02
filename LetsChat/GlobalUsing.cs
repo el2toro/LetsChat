@@ -1,0 +1,8 @@
+﻿global using Carter;
+global using LetsChat.Dtos;
+global using MediatR;
+global using LetsChat.Repositories;
+global using LetsChat.Data;
+global using LetsChat.Models;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Mvc;
