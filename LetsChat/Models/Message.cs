@@ -9,6 +9,7 @@ public class Message
     public DateTime SendAt { get; set; }
     public bool IsDeleted { get; set; }
     public bool IsRead { get; set; }
+    public bool HasResponse { get; set; }
     public User Sender { get; set; } = default!;
     public User Receiver { get; set; } = default!;
 }

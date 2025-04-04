@@ -1,4 +1,4 @@
-﻿using LetsChat.Authentication.Dtos;
+﻿using LetsChat.Auth.Dtos;
 
 namespace LetsChat.Repositories;
 
