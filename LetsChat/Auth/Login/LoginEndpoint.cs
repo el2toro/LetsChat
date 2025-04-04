@@ -1,9 +1,9 @@
-﻿using LetsChat.Authentication.Dtos;
+﻿using LetsChat.Auth.Dtos;
 
-namespace LetsChat.Authentication.Login;
+namespace LetsChat.Auth.Login;
 
 public record LoginRequest(string UserName, string Password);
-public record LoginResponse(User User);
+//public record LoginResponse(LoginDto LoginDto);
 public class LoginEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
@@ -13,7 +13,7 @@ public class LoginEndpoint : ICarterModule
             var query = new LoginDto { UserName = request.UserName, Password = request.Password };
             var result = await sender.Send(new LoginQuery(query));
 
-            return new LoginResponse(result.User);
+            return Results.Ok(result.LoginDto);
         })
         .WithName("Login");
     }
