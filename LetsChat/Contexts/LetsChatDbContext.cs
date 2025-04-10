@@ -1,7 +1,4 @@
-﻿using LetsChat.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace LetsChat.Data;
+﻿namespace LetsChat.Data;
 
 public class LetsChatDbContext(IConfiguration configuration) : DbContext
 {

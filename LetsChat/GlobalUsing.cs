@@ -6,3 +6,4 @@ global using LetsChat.Data;
 global using LetsChat.Models;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Mvc;
+global using LetsChat.Exceptions;

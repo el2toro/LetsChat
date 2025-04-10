@@ -1,4 +1,5 @@
 using LetsChat.Auth.Services;
+using LetsChat.Exceptions.Handler;
 using LetsChat.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSignalR();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 // Configure JWT authentication
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
@@ -62,5 +64,7 @@ app.UseAuthorization();
 app.MapCarter();
 app.MapHub<ChatHub>("/chathub")
     .RequireAuthorization();
+
+app.UseExceptionHandler(options => { });
 
 app.Run();
