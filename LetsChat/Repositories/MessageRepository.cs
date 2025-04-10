@@ -20,17 +20,25 @@ public class MessageRepository(LetsChatDbContext dbContext) : IMessageRepository
 
     public async Task<IEnumerable<Message>> GetMessages(int senderId, int receiverId)
     {
-        var messages = await dbContext.Messages
+        var messagesSender = await dbContext.Messages
             .Where(m => m.SenderId == senderId && m.ReceiverId == receiverId)
             .ToListAsync();
 
-        return messages;
+        var messagesReceiver = await dbContext.Messages
+            .Where(m => m.ReceiverId == senderId && m.SenderId == receiverId)
+            .ToListAsync();
+
+        var concated = messagesSender.Concat(messagesReceiver);
+
+        return messagesSender.Concat(messagesReceiver);
     }
 
     public async Task MarkMessagesAsRead(int senderId, int receiverId, CancellationToken cancellationToken)
     {
         var messages = await dbContext.Messages
-             .Where(m => m.SenderId == senderId && m.ReceiverId == receiverId && !m.IsRead)
+             .Where(m =>
+             (m.SenderId == senderId && m.ReceiverId == receiverId && !m.IsRead) ||
+             (m.SenderId == receiverId && m.ReceiverId == senderId && !m.IsRead))
              .ToListAsync();
 
         foreach (var message in messages)

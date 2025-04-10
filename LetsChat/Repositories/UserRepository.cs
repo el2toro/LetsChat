@@ -1,6 +1,4 @@
-﻿using Azure.Messaging;
-
-namespace LetsChat.Repositories;
+﻿namespace LetsChat.Repositories;
 
 public interface IUserRepository
 {
@@ -9,18 +7,29 @@ public interface IUserRepository
     Task<IEnumerable<Message>> GetUserMessagesById(int senderId, int receiverId, CancellationToken cancellationToken);
     Task CreateUser(User user, CancellationToken cancellationToken);
     Task<User> UpdateUser(User user, CancellationToken cancellationToken);
+    Task DeleteUser(int id, CancellationToken cancellationToken);
 }
 public class UserRepository(LetsChatDbContext dbContext, IConfiguration configuration) : IUserRepository
 {
     public async Task CreateUser(User user, CancellationToken cancellationToken)
     {
-        //var user = await dbContext.Users.FindAsync(1);
-        //await dbContext.Users.AddAsync(user,
+        dbContext.Users.Add(user);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteUser(int id, CancellationToken cancellationToken)
+    {
+        var user = await dbContext.Users.FindAsync(id, cancellationToken) ??
+            throw new UserNotFoundException(id);
+
+        dbContext.Users.Remove(user);
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task<User> GetUserById(int id, CancellationToken cancellationToken)
     {
-        return await dbContext.Users.FirstAsync(u => u.Id == id, cancellationToken);
+        return await dbContext.Users.FindAsync(id, cancellationToken) ??
+            throw new UserNotFoundException(id);
     }
 
     public async Task<IEnumerable<Message>> GetUserMessagesById(int senderId, int receiverId, CancellationToken cancellationToken)
@@ -51,9 +60,21 @@ public class UserRepository(LetsChatDbContext dbContext, IConfiguration configur
         return users;
     }
 
-    public Task<User> UpdateUser(User user, CancellationToken cancellationToken)
+    public async Task<User> UpdateUser(User user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var existingUser = await dbContext.Users.FindAsync(user.Id) ??
+             throw new UserNotFoundException(user.Id);
+
+        existingUser.Surname = user.Surname;
+        existingUser.Name = user.Name;
+        existingUser.Email = user.Email;
+        existingUser.Password = user.Password;
+        existingUser.Username = user.Username;
+
+        dbContext.Users.Update(existingUser);
+        await dbContext.SaveChangesAsync();
+
+        return existingUser;
     }
 
     private async Task<(string content, string sentAt, int count)> GetMessageDetails(int senderId, int receiverId)
@@ -62,8 +83,9 @@ public class UserRepository(LetsChatDbContext dbContext, IConfiguration configur
 
         var query = context.Messages
             .OrderBy(m => m.SendAt)
-            .Where(m => m.SenderId == senderId && m.ReceiverId == receiverId ||
-                m.SenderId == receiverId && m.ReceiverId == senderId && !m.IsRead);
+            .Where(m =>
+                m.SenderId == senderId && m.ReceiverId == receiverId ||
+                m.SenderId == receiverId && m.ReceiverId == senderId);
 
         var message = await query.LastOrDefaultAsync();
         var unreadMessages = await context.Messages
