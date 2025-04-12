@@ -6,10 +6,10 @@ public class MarkMessagesAsReadEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/messages", async ([FromBody] MarkMessagesAsReadRequest request, ISender sender) =>
+        app.MapPatch("/messages", async ([FromBody] MarkMessagesAsReadRequest request, ISender sender) =>
         {
-            await sender.Send(new MarkMessagesAsReadQuery(request.SenderId, request.ReceiverId));
-            return Results.Ok();
+            var result = await sender.Send(new MarkMessagesAsReadQuery(request.SenderId, request.ReceiverId));
+            return Results.Ok(result.Messages);
         })
         .WithName("MarkMessagesAsRead");
     }
