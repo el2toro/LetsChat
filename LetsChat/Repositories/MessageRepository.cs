@@ -6,9 +6,20 @@ public interface IMessageRepository
     Task SendMessage(MessageDto message, CancellationToken cancellationToken);
     Task<Message> GetLastMessage(int senderId, int receiverId, CancellationToken cancellationToken);
     Task MarkMessagesAsRead(int senderId, int receiverId, CancellationToken cancellationToken);
+    Task DeleteMessage(int id, CancellationToken cancellationToken);
+    Task<Message> UpdateMessage(Message message, CancellationToken cancellationToken);
 }
 public class MessageRepository(LetsChatDbContext dbContext) : IMessageRepository
 {
+    public async Task DeleteMessage(int id, CancellationToken cancellationToken)
+    {
+        var message = await dbContext.Messages.FindAsync(id) ??
+            throw new MessageNotFoundException(id);
+
+        dbContext.Messages.Remove(message);
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task<Message> GetLastMessage(int senderId, int receiverId, CancellationToken cancellationToken)
     {
         return await dbContext.Messages
@@ -54,6 +65,19 @@ public class MessageRepository(LetsChatDbContext dbContext) : IMessageRepository
 
         dbContext.Messages.Add(createdMessage);
         await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<Message> UpdateMessage(Message message, CancellationToken cancellationToken)
+    {
+        var existingMessage = await dbContext.Messages.FindAsync(message.Id) ??
+            throw new MessageNotFoundException(message.Id);
+
+        existingMessage.Content = message.Content;
+
+        dbContext.Messages.Update(existingMessage);
+        await dbContext.SaveChangesAsync();
+
+        return existingMessage;
     }
 
     private Message MapMessage(MessageDto messageDto)
