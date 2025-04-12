@@ -1,8 +1,16 @@
 ﻿namespace LetsChat.Data;
 
-public class LetsChatDbContext(IConfiguration configuration) : DbContext
+public class LetsChatDbContext : DbContext
 {
-    private readonly IConfiguration _configuration = configuration;
+    private readonly IConfiguration _configuration;
+    public LetsChatDbContext(DbContextOptions<LetsChatDbContext> options) : base(options)
+    {
+    }
+
+    public LetsChatDbContext(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

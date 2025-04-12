@@ -14,7 +14,7 @@ public class ChatHub(IUserRepository userRepository) : Hub
 
     public async Task GetUsers(int senderId)
     {
-        var users = await userRepository.GetUsers(senderId, new CancellationToken()) ??
+        var users = await userRepository.GetUsers(new CancellationToken()) ??
             new List<UserDto>();
         await Clients.All.SendAsync("GetUsers", users);
     }

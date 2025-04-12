@@ -10,7 +10,6 @@ public class GetUserByIdHandler(IUserRepository userRepository)
     {
         var user = await userRepository.GetUserById(request.UserId, cancellationToken);
         return new GetUserByIdResult(MapToDto(user));
-
     }
 
     //TODO: use automapper

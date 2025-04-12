@@ -1,12 +1,12 @@
 ﻿namespace LetsChat.Users.GetUsers;
 
-public record GetUserRequest(int SenderId) : IRequest<GetUserResponse>;
-public record GetUserResponse(IEnumerable<UserDto> Users);
-public class GetUsersHandler(IUserRepository userRepository) : IRequestHandler<GetUserRequest, GetUserResponse>
+public record GetUsersRequest() : IRequest<GetUsersResult>;
+public record GetUsersResult(IEnumerable<UserDto> Users);
+public class GetUsersHandler(IUserRepository userRepository) : IRequestHandler<GetUsersRequest, GetUsersResult>
 {
-    public async Task<GetUserResponse> Handle(GetUserRequest request, CancellationToken cancellationToken)
+    public async Task<GetUsersResult> Handle(GetUsersRequest request, CancellationToken cancellationToken)
     {
-        var users = await userRepository.GetUsers(request.SenderId, cancellationToken);
-        return new GetUserResponse(users);
+        var users = await userRepository.GetUsers(cancellationToken);
+        return new GetUsersResult(users);
     }
 }

@@ -2,7 +2,7 @@
 
 public interface IUserRepository
 {
-    Task<IEnumerable<UserDto>> GetUsers(int senderId, CancellationToken cancellationToken);
+    Task<IEnumerable<UserDto>> GetUsers(CancellationToken cancellationToken);
     Task<User> GetUserById(int id, CancellationToken cancellationToken);
     Task<IEnumerable<Message>> GetUserMessagesById(int senderId, int receiverId, CancellationToken cancellationToken);
     Task CreateUser(User user, CancellationToken cancellationToken);
@@ -39,25 +39,19 @@ public class UserRepository(LetsChatDbContext dbContext, IConfiguration configur
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<UserDto>> GetUsers(int senderId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserDto>> GetUsers(CancellationToken cancellationToken)
     {
-        var users = await dbContext.Users.Select(u => new UserDto
+        return await dbContext.Users.Select(user => new UserDto
         {
-            Id = u.Id,
-            Name = u.Name,
-            FullName = string.Concat(u.Name, " ", u.Surname),
-        }).ToListAsync(cancellationToken);
+            Username = user.Username,
+            Email = user.Email,
+            FullName = string.Concat(user.Name, " ", user.Surname),
+            Name = user.Name,
+            Id = user.Id,
+            Password = user.Password,
+            Surename = user.Surname,
 
-        foreach (var user in users)
-        {
-            var (messageContent, sentAt, unreadMessages) = await GetMessageDetails(senderId, user.Id);
-
-            user.LastMessage = messageContent;
-            user.LastMessageSendAt = sentAt;
-            user.MessageCount = unreadMessages;
-        }
-
-        return users;
+        }).ToListAsync();
     }
 
     public async Task<User> UpdateUser(User user, CancellationToken cancellationToken)
