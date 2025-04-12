@@ -15,6 +15,9 @@ public class LoginEndpoint : ICarterModule
 
             return Results.Ok(result.LoginDto);
         })
-        .WithName("Login");
+        .WithDisplayName("Login")
+        .Produces<LoginDto>(StatusCodes.Status200OK)
+        .WithDescription("Login")
+        .WithSummary("Login");
     }
 }
