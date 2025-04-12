@@ -9,7 +9,7 @@ public interface IUserRepository
     Task<User> UpdateUser(User user, CancellationToken cancellationToken);
     Task DeleteUser(int id, CancellationToken cancellationToken);
 }
-public class UserRepository(LetsChatDbContext dbContext, IConfiguration configuration) : IUserRepository
+public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsChatDbContext> options) : IUserRepository
 {
     public async Task CreateUser(User user, CancellationToken cancellationToken)
     {
@@ -73,7 +73,7 @@ public class UserRepository(LetsChatDbContext dbContext, IConfiguration configur
 
     private async Task<(string content, string sentAt, int count)> GetMessageDetails(int senderId, int receiverId)
     {
-        using LetsChatDbContext context = new LetsChatDbContext(configuration);
+        using LetsChatDbContext context = new LetsChatDbContext(options);
 
         var query = context.Messages
             .OrderBy(m => m.SendAt)

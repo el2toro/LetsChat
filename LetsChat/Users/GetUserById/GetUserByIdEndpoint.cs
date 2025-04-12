@@ -7,7 +7,7 @@ public class GetUserByIdEndpoint : ICarterModule
         app.MapGet("/user/{userId}", async (int userId, ISender sender) =>
         {
             var result = await sender.Send(new GetUserByIdRequest(userId));
-            return Results.Ok(result);
+            return Results.Ok(result.UserDto);
         })
         .WithDisplayName("GetUserById")
         .Produces(StatusCodes.Status200OK)
