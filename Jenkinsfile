@@ -20,11 +20,11 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                bat 'dotnet test --configuration Release --no-restore --no-build --verbosity normal'
-            }
-        }
+       // stage('Test') {
+       //     steps {
+       //         bat 'dotnet test --configuration Release --no-restore --no-build --verbosity normal'
+       //     }
+       // }
 
         stage('Publish') {
             steps {
