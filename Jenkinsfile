@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        dotnet 'dotnet-8' // Match the tool name in Jenkins config
-    }
-
     stages {
         stage('Checkout') {
             steps {
