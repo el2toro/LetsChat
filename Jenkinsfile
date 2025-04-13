@@ -22,7 +22,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat 'dotnet test --no-restore --no-build --verbosity normal'
+                bat 'dotnet test --configuration Release --no-restore --no-build --verbosity normal'
             }
         }
 
