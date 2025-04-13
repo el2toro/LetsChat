@@ -1,41 +1,40 @@
 pipeline {
     agent any
-
+    environment {
+        IMAGE_NAME = 'letschat'
+        IMAGE_TAG = 'latest'
+    }
     stages {
-        stage('Checkout') {
+        stage('Publish App') {
             steps {
-                git 'https://github.com/el2toro/LetsChat.git'
+                script {
+                    // Publish .NET Core Application
+                    bat 'dotnet publish -c Release -o ./publish'
+                }
             }
         }
-
-        stage('Restore') {
+        stage('Build Docker Image') {
             steps {
-                bat 'dotnet restore'
+                script {
+                    // Build Docker image
+                    bat 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                }
             }
         }
-
-        stage('Build') {
+        stage('Run Docker Container') {
             steps {
-                bat 'dotnet build --configuration Release --no-restore'
-            }
-        }
-
-       // stage('Test') {
-       //     steps {
-       //         bat 'dotnet test --configuration Release --no-restore --no-build --verbosity normal'
-       //     }
-       // }
-
-        stage('Publish') {
-            steps {
-                bat 'dotnet publish -c Release -o ./publish'
+                script {
+                    // Run Docker container
+                    bat 'docker run -d -p 8080:80 $IMAGE_NAME:$IMAGE_TAG'
+                }
             }
         }
     }
-
     post {
-        success {
-            archiveArtifacts artifacts: 'publish/**', fingerprint: true
+        always {
+            // Clean up Docker containers and images after the build
+            bat 'docker container prune -f'
+            bat 'docker image prune -f'
         }
     }
 }
