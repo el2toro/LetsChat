@@ -140,7 +140,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
     {
         var users = new List<User>()
         {
-            new User
+            new()
             {
                 Email = "gerry@gmail.com",
                 Name = "Gerry",

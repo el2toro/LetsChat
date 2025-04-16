@@ -1,4 +1,5 @@
-﻿using LetsChat.Data;
+﻿using LetsChat.Auth.Services;
+using LetsChat.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,9 @@ public class CustomWebAppFactoryUnitTest : WebApplicationFactory<Program>
 
             services.AddSingleton(options);
             services.AddDbContext<LetsChatDbContext>(opt => opt.UseInMemoryDatabase("TestDb"));
+            services.AddScoped<IJwtService, JwtService>();
         });
+
+
     }
 }

@@ -11,7 +11,9 @@ public class LoginHandler(IAuthenticationRepository authenticationRepository, IJ
 {
     public async Task<LoginResult> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        var user = await authenticationRepository.Login(request.LoginDto);
+        var user = await authenticationRepository.Login(request.LoginDto) ??
+            throw new UserNotFoundException(request.LoginDto.UserId);
+
         return new LoginResult(MapResult(user));
     }
 
