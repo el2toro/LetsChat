@@ -9,6 +9,7 @@ public class GetMessagesEndpoint : ICarterModule
             var result = await sender.Send(new GetMessagesRequest(senderId, receiverId));
             return Results.Ok(result.Messages);
         })
-        .WithName("GetMessages");
+        .WithName("GetMessages")
+        .RequireRateLimiting("fixed");
     }
 }
