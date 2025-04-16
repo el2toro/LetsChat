@@ -8,22 +8,24 @@ pipeline {
         stage('Publish App') {
             steps {
                 script {
-                    bat 'dotnet publish -c Release -o .\\publish'
+                    bat 'dotnet publish -c Release -o publish'
                 }
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Ensure the tag is correctly referenced
-                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                    bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} ."
                 }
             }
         }
         stage('Run Docker Container') {
             steps {
                 script {
-                    bat "docker run -d -p 8080:80 %IMAGE_NAME%:%IMAGE_TAG%"
+                    // Stop old container if exists
+                    bat "docker rm -f letschat-container || exit 0"
+                    // Run new container
+                    bat "docker run -d -p 8080:80 --name letschat-container ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                 }
             }
         }
