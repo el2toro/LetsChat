@@ -8,6 +8,7 @@ pipeline {
         stage('Publish App') {
             steps {
                 script {
+                    // Already inside the folder with .csproj
                     bat 'dotnet publish -c Release -o publish'
                 }
             }
@@ -15,25 +16,26 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} -f LetsChat/LetsChat/Dockerfile LetsChat"
-                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
-                    bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                    // Build using Dockerfile in current directory, using current folder as context
+                    bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f Dockerfile ."
                 }
             }
         }
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Stop old container if exists
+                    // Stop container if already exists
                     bat "docker rm -f letschat-container || exit 0"
-                    // Run new container
-                    bat "docker run -d -p 8080:80 --name letschat-container ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+
+                    // Run the container
+                    bat "docker run -d -p 8080:80 --name letschat-container ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
     }
     post {
         always {
+            // Clean up dangling containers and images
             bat 'docker container prune -f'
             bat 'docker image prune -f'
         }
