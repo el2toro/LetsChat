@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     // Build using Dockerfile in current directory, using current folder as context
-                    bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f Dockerfile ."
+                    bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f LetsChat/Dockerfile ."
                 }
             }
         }
