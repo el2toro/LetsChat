@@ -15,7 +15,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} -f LetsChat/Dockerfile LetsChat"
+                    bat "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} -f LetsChat/LetsChat/Dockerfile LetsChat"
                     bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
                     bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
                 }
