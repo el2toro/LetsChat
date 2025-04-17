@@ -28,7 +28,7 @@ pipeline {
                     bat "docker rm -f letschat-container || exit 0"
 
                     // Run the container
-                    bat "docker run -d -p 8080:80 --name letschat-container ${IMAGE_NAME}:${IMAGE_TAG}"
+                    bat "docker run -d -p 9090:80 --name letschat-container ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
