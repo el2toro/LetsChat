@@ -11,18 +11,9 @@ public class GetUserByIdHandler(IUserRepository userRepository, ILogger<GetUserB
         logger.LogInformation("GetUserByIdHandler called with UserId: {UserId}", request.UserId);
 
         var user = await userRepository.GetUserById(request.UserId, cancellationToken);
-        return new GetUserByIdResult(MapToDto(user));
-    }
 
-    //TODO: use automapper
-    private UserDto MapToDto(User user) => new()
-    {
-        Id = user.Id,
-        Name = user.Name,
-        Email = user.Email,
-        FullName = string.Concat(user.Name, " ", user.Surname),
-        Surename = user.Surname,
-        Username = user.Username,
-        Password = user.Password
-    };
+        var result = user.Adapt<UserDto>();
+
+        return new GetUserByIdResult(result);
+    }
 }

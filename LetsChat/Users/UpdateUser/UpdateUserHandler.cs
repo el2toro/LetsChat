@@ -1,42 +1,17 @@
-﻿using LetsChat.Intefaces;
-
-namespace LetsChat.Users.UpdateUser;
+﻿namespace LetsChat.Users.UpdateUser;
 
 public record UpdateUserRequest(UserDto UserDto) : IRequest<UpdateUserResult>;
 public record UpdateUserResult(UserDto UserDto);
-public class UpdateUserHandler(IUserRepository userRepository)
+public class UpdateUserHandler(IUserRepository userRepository, ILogger<UpdateUserHandler> logger)
     : IRequestHandler<UpdateUserRequest, UpdateUserResult>
 {
     public async Task<UpdateUserResult> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        var updatedUser = await userRepository.UpdateUser(MapToUser(request.UserDto), cancellationToken);
-        return new UpdateUserResult(MapToDto(updatedUser));
-    }
+        logger.LogInformation("UpdateUserHandler called with UserDto: {UserDto}", request.UserDto);
 
-    //TODO: use automapper
-    private User MapToUser(UserDto userDto)
-    {
-        return new User
-        {
-            Id = userDto.Id,
-            Name = userDto.Name,
-            Email = userDto.Email,
-            Username = userDto.Username,
-            Password = userDto.Password,
-            Surname = userDto.Surename
-        };
-    }
+        var user = request.UserDto.Adapt<User>();
 
-    private UserDto MapToDto(User user)
-    {
-        return new UserDto
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Username = user.Username,
-            Password = user.Password,
-            Surename = user.Surname
-        };
+        var updatedUser = await userRepository.UpdateUser(user, cancellationToken);
+        return new UpdateUserResult(updatedUser.Adapt<UserDto>());
     }
 }

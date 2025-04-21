@@ -29,11 +29,11 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
         {
             Username = user.Username,
             Email = user.Email,
-            FullName = string.Concat(user.Name, " ", user.Surname),
+            FullName = string.Concat(user.Name, " ", user.Surename),
             Name = user.Name,
             Id = user.Id,
             Password = user.Password,
-            Surename = user.Surname,
+            Surename = user.Surename,
 
         })
         .AsNoTracking()
@@ -45,7 +45,7 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
         var existingUser = await dbContext.Users.FindAsync(user.Id) ??
              throw new UserNotFoundException(user.Id);
 
-        existingUser.Surname = user.Surname;
+        existingUser.Surename = user.Surename;
         existingUser.Name = user.Name;
         existingUser.Email = user.Email;
         existingUser.Password = user.Password;

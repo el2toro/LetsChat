@@ -22,7 +22,7 @@ public class LoginHandler(IAuthenticationRepository authenticationRepository, IJ
         return new LoginDto
         {
             UserId = user.Id,
-            FullName = string.Concat(user.Name, " ", user.Surname),
+            FullName = string.Concat(user.Name, " ", user.Surename),
             Token = jwtService.GenerateToken(user.Id, user.Username)
         };
     }

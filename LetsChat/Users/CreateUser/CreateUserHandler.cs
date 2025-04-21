@@ -3,21 +3,16 @@
 public record CreateUserRequest(UserDto UserDto) : IRequest<CreateUserResult>;
 public record CreateUserResult(bool IsSuccess);
 
-public class CreateUserHandler(IUserRepository userRepository)
+public class CreateUserHandler(IUserRepository userRepository, ILogger<CreateUserHandler> logger)
     : IRequestHandler<CreateUserRequest, CreateUserResult>
 {
     public async Task<CreateUserResult> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        await userRepository.CreateUser(MapUser(request.UserDto), cancellationToken);
+        logger.LogInformation("CreateUserHandler called with UserDto: {@UserDto}", request.UserDto);
+
+        var user = request.UserDto.Adapt<User>();
+
+        await userRepository.CreateUser(user, cancellationToken);
         return new CreateUserResult(true);
     }
-
-    private User MapUser(UserDto userDto) => new()
-    {
-        Email = userDto.Email,
-        Name = userDto.Name,
-        Password = userDto.Password,
-        Surname = userDto.Surename,
-        Username = userDto.Username
-    };
 }

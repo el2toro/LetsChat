@@ -9,3 +9,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using LetsChat.Exceptions;
 global using LetsChat.Intefaces;
 global using FluentValidation;
+global using Mapster;
