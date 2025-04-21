@@ -2,8 +2,8 @@
 using LetsChat.Auth.Login;
 using LetsChat.Auth.Services;
 using LetsChat.Exceptions;
+using LetsChat.Intefaces;
 using LetsChat.Models;
-using LetsChat.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 

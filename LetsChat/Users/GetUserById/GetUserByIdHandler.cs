@@ -1,4 +1,6 @@
-﻿namespace LetsChat.Users.GetUserById;
+﻿using LetsChat.Intefaces;
+
+namespace LetsChat.Users.GetUserById;
 
 public record GetUserByIdRequest(int UserId) : IRequest<GetUserByIdResult>;
 public record GetUserByIdResult(UserDto UserDto);

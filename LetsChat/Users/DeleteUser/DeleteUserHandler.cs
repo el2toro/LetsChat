@@ -1,4 +1,6 @@
-﻿namespace LetsChat.Users.DeleteUser;
+﻿using LetsChat.Intefaces;
+
+namespace LetsChat.Users.DeleteUser;
 
 public record DeleteUserRequest(int UserId) : IRequest<DeleteUserResult>;
 public record DeleteUserResult(bool IsSuccess);

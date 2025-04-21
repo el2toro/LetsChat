@@ -1,4 +1,6 @@
-﻿namespace LetsChat.Users.CreateUser;
+﻿using LetsChat.Intefaces;
+
+namespace LetsChat.Users.CreateUser;
 
 public record CreateUserRequest(UserDto UserDto) : IRequest<CreateUserResult>;
 public record CreateUserResult(bool IsSuccess);

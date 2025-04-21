@@ -1,6 +1,6 @@
 ﻿using LetsChat.Dtos;
+using LetsChat.Intefaces;
 using LetsChat.Messages.SendMessage;
-using LetsChat.Repositories;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;

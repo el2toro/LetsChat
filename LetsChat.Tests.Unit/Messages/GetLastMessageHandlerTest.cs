@@ -1,6 +1,6 @@
-﻿using LetsChat.Messages.GetLastMessage;
+﻿using LetsChat.Intefaces;
+using LetsChat.Messages.GetLastMessage;
 using LetsChat.Models;
-using LetsChat.Repositories;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;

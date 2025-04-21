@@ -1,6 +1,6 @@
 ﻿using LetsChat.Dtos;
+using LetsChat.Intefaces;
 using LetsChat.Models;
-using LetsChat.Repositories;
 using LetsChat.Users.UpdateUser;
 using Moq;
 

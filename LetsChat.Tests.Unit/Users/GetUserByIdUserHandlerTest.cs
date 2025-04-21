@@ -1,5 +1,5 @@
-﻿using LetsChat.Models;
-using LetsChat.Repositories;
+﻿using LetsChat.Intefaces;
+using LetsChat.Models;
 using LetsChat.Users.GetUserById;
 using Moq;
 

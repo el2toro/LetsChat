@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using LetsChat.Intefaces;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LetsChat.Hubs;
 

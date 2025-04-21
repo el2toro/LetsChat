@@ -1,11 +1,6 @@
 ﻿using LetsChat.Auth.Dtos;
 
 namespace LetsChat.Repositories;
-
-public interface IAuthenticationRepository
-{
-    Task<User> Login(LoginDto loginDto);
-}
 public class AuthenticationRepository(LetsChatDbContext dbContext) : IAuthenticationRepository
 {
     public async Task<User> Login(LoginDto loginDto)

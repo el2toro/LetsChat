@@ -1,7 +1,7 @@
 ﻿using LetsChat.Dtos;
+using LetsChat.Intefaces;
 using LetsChat.Messages.UpdateMessage;
 using LetsChat.Models;
-using LetsChat.Repositories;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;

@@ -1,4 +1,4 @@
-﻿using LetsChat.Repositories;
+﻿using LetsChat.Intefaces;
 using LetsChat.Users.DeleteUser;
 using Moq;
 

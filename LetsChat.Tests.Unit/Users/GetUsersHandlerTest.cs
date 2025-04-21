@@ -1,5 +1,5 @@
 ﻿using LetsChat.Dtos;
-using LetsChat.Repositories;
+using LetsChat.Intefaces;
 using LetsChat.Users.GetUsers;
 using Moq;
 

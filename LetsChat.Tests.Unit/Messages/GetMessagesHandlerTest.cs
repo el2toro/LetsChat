@@ -1,6 +1,6 @@
-﻿using LetsChat.Messages.GetMessages;
+﻿using LetsChat.Intefaces;
+using LetsChat.Messages.GetMessages;
 using LetsChat.Models;
-using LetsChat.Repositories;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;

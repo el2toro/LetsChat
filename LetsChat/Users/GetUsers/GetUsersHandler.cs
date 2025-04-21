@@ -1,4 +1,6 @@
-﻿namespace LetsChat.Users.GetUsers;
+﻿using LetsChat.Intefaces;
+
+namespace LetsChat.Users.GetUsers;
 
 public record GetUsersRequest() : IRequest<GetUsersResult>;
 public record GetUsersResult(IEnumerable<UserDto> Users);

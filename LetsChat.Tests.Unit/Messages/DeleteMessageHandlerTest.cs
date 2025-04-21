@@ -1,5 +1,5 @@
-﻿using LetsChat.Messages.DeleteMessage;
-using LetsChat.Repositories;
+﻿using LetsChat.Intefaces;
+using LetsChat.Messages.DeleteMessage;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;

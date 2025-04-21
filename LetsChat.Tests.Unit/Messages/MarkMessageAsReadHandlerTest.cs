@@ -1,6 +1,6 @@
-﻿using LetsChat.Messages.MarkMessageAsRead;
+﻿using LetsChat.Intefaces;
+using LetsChat.Messages.MarkMessageAsRead;
 using LetsChat.Models;
-using LetsChat.Repositories;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;

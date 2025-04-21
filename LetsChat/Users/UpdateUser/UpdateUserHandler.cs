@@ -1,4 +1,6 @@
-﻿namespace LetsChat.Users.UpdateUser;
+﻿using LetsChat.Intefaces;
+
+namespace LetsChat.Users.UpdateUser;
 
 public record UpdateUserRequest(UserDto UserDto) : IRequest<UpdateUserResult>;
 public record UpdateUserResult(UserDto UserDto);
