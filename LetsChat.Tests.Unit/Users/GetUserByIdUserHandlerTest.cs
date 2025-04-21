@@ -1,6 +1,8 @@
-﻿using LetsChat.Intefaces;
+﻿using Castle.Core.Logging;
+using LetsChat.Intefaces;
 using LetsChat.Models;
 using LetsChat.Users.GetUserById;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Users;
@@ -8,11 +10,13 @@ namespace LetsChat.Tests.Unit.Users;
 public class GetUserByIdUserHandlerTest
 {
     Mock<IUserRepository> _userRepository;
+    Mock<ILogger<GetUserByIdHandler>> _logger;
     GetUserByIdHandler _getUserByIdHandler;
     public GetUserByIdUserHandlerTest()
     {
         _userRepository = new Mock<IUserRepository>();
-        _getUserByIdHandler = new GetUserByIdHandler(_userRepository.Object);
+        _logger = new Mock<ILogger<GetUserByIdHandler>>();
+        _getUserByIdHandler = new GetUserByIdHandler(_userRepository.Object, _logger.Object);
     }
 
     [Fact]
@@ -26,7 +30,7 @@ public class GetUserByIdUserHandlerTest
             Email = "newmail@gmail.com",
             Name = "Test",
             Password = "123456",
-            Surname = "Test2",
+            Surename = "Test2",
             Username = "Testing",
         };
 

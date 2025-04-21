@@ -2,6 +2,7 @@
 using LetsChat.Intefaces;
 using LetsChat.Models;
 using LetsChat.Users.CreateUser;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Users;
@@ -10,10 +11,12 @@ public class CreateUserHandlerTest
 {
     CreateUserHandler sut;
     Mock<IUserRepository> _userRepository;
+    Mock<ILogger<CreateUserHandler>> _logger;
     public CreateUserHandlerTest()
     {
         _userRepository = new Mock<IUserRepository>();
-        sut = new CreateUserHandler(_userRepository.Object);
+        _logger = new Mock<ILogger<CreateUserHandler>>();
+        sut = new CreateUserHandler(_userRepository.Object, _logger.Object);
     }
 
     [Fact]
@@ -32,7 +35,7 @@ public class CreateUserHandlerTest
         {
             Email = "mail",
             Name = "Test",
-            Surname = "Test 2",
+            Surename = "Test 2",
             Username = "Testing",
             Id = 1,
             Password = "password",

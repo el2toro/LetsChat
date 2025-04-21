@@ -34,7 +34,7 @@ public class LoginHandlerTest : IClassFixture<CustomWebAppFactoryUnitTest>
         {
             Id = 1,
             Name = "Test",
-            Surname = "User",
+            Surename = "User",
             Username = "testuser"
         };
 

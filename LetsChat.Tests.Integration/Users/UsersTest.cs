@@ -1,7 +1,9 @@
 ﻿using LetsChat.Data;
 using LetsChat.Dtos;
 using LetsChat.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -33,7 +35,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         {
             Email = "gerry@gmail.com",
             Name = "Gerrypp",
-            Surname = "Atekop",
+            Surename = "Atekop",
             Username = "testing99",
             Password = "555555"
         };
@@ -67,7 +69,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
             Name = "New user",
             Surename = "useruser",
             Username = "User",
-            Password = "a123654"
+            Password = "Password1",
         };
 
         var content = new StringContent(JsonSerializer.Serialize(request),
@@ -78,6 +80,31 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
+
+    //TODO: Validation tests
+    [Fact]
+    async Task CreateUser_When_Email_Invalid_Return_BadRequest()
+    {
+        //var request = new UserDto
+        //{
+        //    Email = "usergmail.com",
+        //    Name = "New user",
+        //    Surename = "useruser",
+        //    Username = "User",
+        //    Password = "Password1",
+        //};
+
+        //var content = new StringContent(JsonSerializer.Serialize(request),
+        //    Encoding.UTF8,
+        //    "application/json");
+
+        //var response = await _client.PostAsync("user/", content);
+        //var json = await response.Content.ReadAsStringAsync();
+        //var errorResponse = JsonSerializer.Deserialize<ValidationException>(json, _jsonSerializerOptions);
+
+        //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
 
     [Fact]
     async Task UpdateUser_Should_Return_StatusCode_200()
@@ -156,7 +183,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
             {
                 Email = "gerry@gmail.com",
                 Name = "Gerry",
-                Surname = "Ateko",
+                Surename = "Ateko",
                 Username = "gerriko",
                 Password = "123456"
             },
@@ -164,7 +191,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
             {
                 Email = "delgado@gmail.com",
                 Name = "Anny",
-                Surname = "Delgado",
+                Surename = "Delgado",
                 Username = "anilor",
                 Password = "321654"
             },
@@ -172,7 +199,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
             {
                 Email = "ggg@gmail.com",
                 Name = "Mek",
-                Surname = "Aelo",
+                Surename = "Aelo",
                 Username = "meky",
                 Password = "88956"
             },

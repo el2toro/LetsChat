@@ -74,7 +74,7 @@ public class AuthTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
                 Username = "testing",
                 Password = "password",
                 Name = "Test",
-                Surname = "Test",
+                Surename = "Test",
                 Email = "test@gmail.com",
             },
             new()
@@ -82,7 +82,7 @@ public class AuthTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
                 Username = "testing2",
                 Password = "password2",
                 Name = "Test2",
-                Surname = "Test2",
+                Surename = "Test2",
                 Email = "test2@gmail.com",
             },
         };

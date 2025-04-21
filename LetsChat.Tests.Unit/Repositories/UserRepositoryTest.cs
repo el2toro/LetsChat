@@ -30,7 +30,7 @@ public class UserRepositoryTest : IClassFixture<CustomWebAppFactoryUnitTest>
         {
             Email = "mail",
             Name = "Test",
-            Surname = "Test 2",
+            Surename = "Test 2",
             Username = "Testing",
             Password = "password"
         };
@@ -52,7 +52,7 @@ public class UserRepositoryTest : IClassFixture<CustomWebAppFactoryUnitTest>
             Id = 1,
             Email = "mail",
             Name = "Test",
-            Surname = "Test 2",
+            Surename = "Test 2",
             Username = "Testing",
             Password = "password"
         };
@@ -63,7 +63,7 @@ public class UserRepositoryTest : IClassFixture<CustomWebAppFactoryUnitTest>
         Assert.Equal(user.Id, updatedUser.Id);
         Assert.Equal(user.Email, updatedUser.Email);
         Assert.Equal(user.Name, updatedUser.Name);
-        Assert.Equal(user.Surname, updatedUser.Surname);
+        Assert.Equal(user.Surename, updatedUser.Surename);
         Assert.Equal(user.Username, updatedUser.Username);
         Assert.Equal(user.Password, updatedUser.Password);
     }
@@ -123,7 +123,7 @@ public class UserRepositoryTest : IClassFixture<CustomWebAppFactoryUnitTest>
             {
                 Email = "gerry@gmail.com",
                 Name = "Gerry",
-                Surname = "Ateko",
+                Surename = "Ateko",
                 Username = "gerriko",
                 Password = "123456"
             },
@@ -131,7 +131,7 @@ public class UserRepositoryTest : IClassFixture<CustomWebAppFactoryUnitTest>
             {
                 Email = "delgado@gmail.com",
                 Name = "Anny",
-                Surname = "Delgado",
+                Surename = "Delgado",
                 Username = "anilor",
                 Password = "321654"
             },

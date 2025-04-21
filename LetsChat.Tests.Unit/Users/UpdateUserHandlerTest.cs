@@ -2,6 +2,7 @@
 using LetsChat.Intefaces;
 using LetsChat.Models;
 using LetsChat.Users.UpdateUser;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Users;
@@ -9,11 +10,13 @@ namespace LetsChat.Tests.Unit.Users;
 public class UpdateUserHandlerTest
 {
     Mock<IUserRepository> _userRepository;
+    Mock<ILogger<UpdateUserHandler>> _logger;
     UpdateUserHandler _updateUserHandler;
     public UpdateUserHandlerTest()
     {
         _userRepository = new Mock<IUserRepository>();
-        _updateUserHandler = new UpdateUserHandler(_userRepository.Object);
+        _logger = new Mock<ILogger<UpdateUserHandler>>();
+        _updateUserHandler = new UpdateUserHandler(_userRepository.Object, _logger.Object);
     }
 
     [Fact]
@@ -32,7 +35,7 @@ public class UpdateUserHandlerTest
         {
             Email = "mail",
             Name = "Test",
-            Surname = "Test 2",
+            Surename = "Test 2",
             Username = "Testing",
             Id = 1,
             Password = "password",

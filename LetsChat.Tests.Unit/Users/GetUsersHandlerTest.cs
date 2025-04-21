@@ -1,6 +1,7 @@
 ﻿using LetsChat.Dtos;
 using LetsChat.Intefaces;
 using LetsChat.Users.GetUsers;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Users;
@@ -8,11 +9,13 @@ namespace LetsChat.Tests.Unit.Users;
 public class GetUsersHandlerTest
 {
     Mock<IUserRepository> _userRepository;
+    Mock<ILogger<GetUsersHandler>> _logger;
     GetUsersHandler _getUsersHandler;
     public GetUsersHandlerTest()
     {
         _userRepository = new Mock<IUserRepository>();
-        _getUsersHandler = new GetUsersHandler(_userRepository.Object);
+        _logger = new Mock<ILogger<GetUsersHandler>>();
+        _getUsersHandler = new GetUsersHandler(_userRepository.Object, _logger.Object);
     }
 
     [Fact]
