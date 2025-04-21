@@ -5,6 +5,22 @@ pipeline {
         IMAGE_TAG = 'latest'
     }
     stages {
+
+     stage('Restore') {
+            steps {
+                bat 'dotnet restore'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Assuming your test project is at LetsChat.Tests or similar
+                    bat 'dotnet test --logger:"trx;LogFileName=test_results.trx" --results-directory:"TestResults"'
+                }
+            }
+        }
+
         stage('Publish App') {
             steps {
                 script {
