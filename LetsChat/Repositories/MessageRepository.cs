@@ -14,6 +14,7 @@ public class MessageRepository(LetsChatDbContext dbContext)
     public async Task<Message> GetLastMessage(int senderId, int receiverId, CancellationToken cancellationToken)
     {
         return await dbContext.Messages
+            .AsNoTracking()
             .OrderBy(m => m.SendAt)
             .LastOrDefaultAsync(m => m.SenderId == senderId && m.ReceiverId == receiverId ||
                 m.SenderId == receiverId && m.ReceiverId == senderId) ??
@@ -24,10 +25,12 @@ public class MessageRepository(LetsChatDbContext dbContext)
     {
         var messagesSender = await dbContext.Messages
             .Where(m => m.SenderId == senderId && m.ReceiverId == receiverId)
+            .AsNoTracking()
             .ToListAsync();
 
         var messagesReceiver = await dbContext.Messages
             .Where(m => m.ReceiverId == senderId && m.SenderId == receiverId)
+            .AsNoTracking()
             .ToListAsync();
 
         var concated = messagesSender.Concat(messagesReceiver);
@@ -52,11 +55,9 @@ public class MessageRepository(LetsChatDbContext dbContext)
         return messages;
     }
 
-    public async Task SendMessage(MessageDto message, CancellationToken cancellationToken)
+    public async Task SendMessage(Message message, CancellationToken cancellationToken)
     {
-        var createdMessage = MapMessage(message);
-
-        dbContext.Messages.Add(createdMessage);
+        dbContext.Messages.Add(message);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
@@ -71,18 +72,5 @@ public class MessageRepository(LetsChatDbContext dbContext)
         await dbContext.SaveChangesAsync();
 
         return existingMessage;
-    }
-
-    private Message MapMessage(MessageDto messageDto)
-    {
-        return new Message
-        {
-            SenderId = messageDto.SenderId,
-            ReceiverId = messageDto.ReceiverId,
-            Content = messageDto.Content,
-            SendAt = DateTime.Now,
-            IsDeleted = messageDto.IsDeleted,
-            IsRead = messageDto.IsRead
-        };
     }
 }

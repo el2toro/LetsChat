@@ -1,6 +1,7 @@
 ﻿using LetsChat.Dtos;
 using LetsChat.Intefaces;
 using LetsChat.Messages.SendMessage;
+using LetsChat.Models;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;
@@ -18,7 +19,7 @@ public class SendMessageHandlerTest
     [Fact]
     async Task Handle_Should_Return_SendMesageResult()
     {
-        _messageRepository.Setup(x => x.SendMessage(It.IsAny<MessageDto>(), It.IsAny<CancellationToken>()))
+        _messageRepository.Setup(x => x.SendMessage(It.IsAny<Message>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var message = new MessageDto
