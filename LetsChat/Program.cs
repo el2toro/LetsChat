@@ -1,3 +1,4 @@
+using Core.Behaviors;
 using LetsChat.Auth.Services;
 using LetsChat.Exceptions.Handler;
 using LetsChat.Hubs;
@@ -16,11 +17,16 @@ public class Program
         // Add services to the container.
         var assembly = typeof(Program).Assembly;
 
-        builder.Services.AddCarter();
         builder.Services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(assembly);
+            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
+
+        builder.Services.AddValidatorsFromAssembly(assembly);
+
+        builder.Services.AddCarter();
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IMessageRepository, MessageRepository>();

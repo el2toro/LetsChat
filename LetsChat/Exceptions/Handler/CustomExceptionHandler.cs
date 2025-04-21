@@ -14,12 +14,12 @@ public class CustomExceptionHandler : IExceptionHandler
                exception.GetType().Name,
                context.Response.StatusCode = StatusCodes.Status500InternalServerError
             ),
-            //ValidationException =>
-            //(
-            //   exception.Message,
-            //   exception.GetType().Name,
-            //   context.Response.StatusCode = StatusCodes.Status400BadRequest
-            //),
+            ValidationException =>
+            (
+               exception.Message,
+               exception.GetType().Name,
+               context.Response.StatusCode = StatusCodes.Status400BadRequest
+            ),
             BadRequestException =>
             (
                exception.Message,

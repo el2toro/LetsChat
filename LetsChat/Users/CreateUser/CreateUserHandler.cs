@@ -1,9 +1,8 @@
-﻿using LetsChat.Intefaces;
-
-namespace LetsChat.Users.CreateUser;
+﻿namespace LetsChat.Users.CreateUser;
 
 public record CreateUserRequest(UserDto UserDto) : IRequest<CreateUserResult>;
 public record CreateUserResult(bool IsSuccess);
+
 public class CreateUserHandler(IUserRepository userRepository)
     : IRequestHandler<CreateUserRequest, CreateUserResult>
 {
@@ -13,15 +12,12 @@ public class CreateUserHandler(IUserRepository userRepository)
         return new CreateUserResult(true);
     }
 
-    private User MapUser(UserDto userDto)
+    private User MapUser(UserDto userDto) => new()
     {
-        return new User
-        {
-            Email = userDto.Email,
-            Name = userDto.Name,
-            Password = userDto.Password,
-            Surname = userDto.Surename,
-            Username = userDto.Username
-        };
-    }
+        Email = userDto.Email,
+        Name = userDto.Name,
+        Password = userDto.Password,
+        Surname = userDto.Surename,
+        Username = userDto.Username
+    };
 }
