@@ -35,7 +35,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
 
         Assert.NotNull(user);
         Assert.Equal(1, user.Id);
-        Assert.Equal("gerriko", user.Username);
+        Assert.Equal("testing", user.Username);
     }
 
     [Fact]

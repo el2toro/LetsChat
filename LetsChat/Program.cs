@@ -37,8 +37,7 @@ public class Program
             options.AddPolicy("AllowAll", builder =>
                 builder.AllowAnyMethod()
                        .AllowAnyHeader()
-                       .AllowCredentials()
-                       .WithOrigins("http://localhost:4200"));
+                       .AllowAnyOrigin());
         });
 
         builder.Services.AddSignalR();
@@ -103,7 +102,10 @@ public class Program
         // Configure the HTTP request pipeline.
         app.UseCors("AllowAll");
 
-        app.UseRateLimiter();
+        if (!app.Environment.IsEnvironment("Testing"))
+        {
+            app.UseRateLimiter(); // Don't apply in integration tests
+        }
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -115,6 +117,5 @@ public class Program
         app.UseExceptionHandler(options => { });
 
         app.Run();
-
     }
 }

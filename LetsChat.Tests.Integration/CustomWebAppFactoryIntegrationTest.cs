@@ -11,6 +11,9 @@ public class CustomWebAppFactoryIntegrationTest : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // Modify services specifically for testing (e.g., in-memory database)
+
+        builder.UseEnvironment("Testing");
+
         builder.ConfigureServices(services =>
         {
             var options = new DbContextOptionsBuilder<LetsChatDbContext>()
@@ -22,3 +25,4 @@ public class CustomWebAppFactoryIntegrationTest : WebApplicationFactory<Program>
         });
     }
 }
+
