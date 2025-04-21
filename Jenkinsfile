@@ -3,10 +3,33 @@ pipeline {
     environment {
         IMAGE_NAME = 'letschat'
         IMAGE_TAG = 'latest'
+        SQL_CONTAINER_NAME = 'sqlserver'
+        SQL_PASSWORD = 'YourPassword123!'
+        DOCKER_NETWORK = 'letschat-net'
     }
     stages {
 
-     stage('Restore') {
+        stage('Create Docker Network') {
+            steps {
+                script {
+                    bat "docker network create ${DOCKER_NETWORK} || exit 0"
+                }
+            }
+        }
+
+        stage('Start SQL Server Container') {
+            steps {
+                script {
+                    bat """
+                        docker run -d --name ${SQL_CONTAINER_NAME} --network ${DOCKER_NETWORK} ^
+                        -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=${SQL_PASSWORD}\" ^
+                        -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+                    """
+                }
+            }
+        }
+
+        stage('Restore') {
             steps {
                 bat 'dotnet restore'
             }
@@ -14,39 +37,46 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                script {
-                    // Assuming your test project is at LetsChat.Tests or similar
-                    bat 'dotnet test --logger:"trx;LogFileName=test_results.trx" --results-directory:"TestResults"'
-                }
+                bat """
+                    dotnet test --logger:\"trx;LogFileName=test_results.trx\" --results-directory:\"TestResults\"
+                """
+            }
+        }
+
+        stage('Publish App') {
+            steps {
+                bat 'dotnet publish LetsChat/LetsChat.csproj -c Release -o publish'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Build using Dockerfile in current directory, using current folder as context
-                    bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f LetsChat/Dockerfile ."
-                }
+                bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f LetsChat/Dockerfile ."
             }
         }
-        stage('Run Docker Container') {
+
+        stage('Run LetsChat App') {
             steps {
                 script {
-                    // Stop container if already exists
+                    // Remove existing app container if needed
                     bat "docker rm -f letschat-container || exit 0"
 
-                    // Run the container
-                    bat "docker run -d -p 9090:8080 --name letschat-container ${IMAGE_NAME}:${IMAGE_TAG}"
+                    // Run the app container with same network
+                    bat """
+                        docker run -d --name letschat-container --network ${DOCKER_NETWORK} ^
+                        -p 9090:8080 -e \"ConnectionStrings__DefaultConnection=Server=${SQL_CONTAINER_NAME};Database=LetsChatDb;User Id=sa;Password=${SQL_PASSWORD};\" ^
+                        ${IMAGE_NAME}:${IMAGE_TAG}
+                    """
                 }
             }
         }
     }
+
     post {
         always {
-            // Clean up dangling containers and images
-            bat 'docker container prune -f'
-            bat 'docker image prune -f'
-
+            bat "docker rm -f letschat-container || exit 0"
+            bat "docker rm -f ${SQL_CONTAINER_NAME} || exit 0"
+            bat "docker network rm ${DOCKER_NETWORK} || exit 0"
             cleanWs()
         }
     }
