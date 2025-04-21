@@ -21,14 +21,6 @@ pipeline {
             }
         }
 
-        stage('Publish App') {
-            steps {
-                script {
-                    // Already inside the folder with .csproj
-                    bat 'dotnet publish LetsChat/LetsChat.csproj -c Release -o publish'
-                }
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 script {
