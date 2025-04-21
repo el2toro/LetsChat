@@ -29,13 +29,25 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
     [Fact]
     async Task GetUserById_Should_Return_UserDto()
     {
-        var response = await _client.GetAsync("user/1");
+        var newUser = new User
+        {
+            Email = "gerry@gmail.com",
+            Name = "Gerrypp",
+            Surname = "Atekop",
+            Username = "testing99",
+            Password = "555555"
+        };
+
+        _context.Users.Add(newUser);
+        _context.SaveChanges();
+
+        var response = await _client.GetAsync($"user/{newUser.Id}");
         var json = await response.Content.ReadAsStringAsync();
         var user = JsonSerializer.Deserialize<UserDto>(json, _jsonSerializerOptions);
 
         Assert.NotNull(user);
-        Assert.Equal(1, user.Id);
-        Assert.Equal("testing", user.Username);
+        Assert.Equal(newUser.Id, user.Id);
+        Assert.Equal("testing99", user.Username);
     }
 
     [Fact]

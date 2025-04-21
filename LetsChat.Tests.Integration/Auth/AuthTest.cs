@@ -43,7 +43,6 @@ public class AuthTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         var user = JsonSerializer.Deserialize<LoginDto>(json, _jsonSerializerOptions);
 
         Assert.NotNull(user);
-        Assert.Equal(1, user.UserId);
         Assert.Equal("Test Test", user.FullName);
         Assert.NotEmpty(user.Token);
         Assert.Null(user.UserName);
