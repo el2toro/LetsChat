@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     // Already inside the folder with .csproj
-                    bat 'dotnet publish -c Release -o publish'
+                    bat 'dotnet publish LetsChat/LetsChat.csproj -c Release -o publish'
                 }
             }
         }
@@ -54,6 +54,8 @@ pipeline {
             // Clean up dangling containers and images
             bat 'docker container prune -f'
             bat 'docker image prune -f'
+
+            cleanWs()
         }
     }
 }
