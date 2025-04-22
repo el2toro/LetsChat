@@ -1,10 +1,13 @@
-﻿using LetsChat.Data;
+﻿using LetsChat.Auth.Services;
+using LetsChat.Data;
 using LetsChat.Dtos;
 using LetsChat.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -15,6 +18,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
     private readonly HttpClient _client;
     private readonly LetsChatDbContext _context;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+    private readonly IJwtService _jwtService;
     public UsersTest(CustomWebAppFactoryIntegrationTest factory)
     {
         _jsonSerializerOptions = new JsonSerializerOptions
@@ -23,7 +27,11 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         };
 
         _client = factory.CreateClient();
-        _context = factory.Services.CreateScope().ServiceProvider.GetRequiredService<LetsChatDbContext>();
+
+        var scope = factory.Services.CreateScope();
+
+        _context = scope.ServiceProvider.GetRequiredService<LetsChatDbContext>();
+        _jwtService = scope.ServiceProvider.GetRequiredService<IJwtService>();
 
         SeedDatabase();
     }
@@ -31,6 +39,11 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
     [Fact]
     async Task GetUserById_Should_Return_UserDto()
     {
+        var token = _jwtService.GenerateToken(userId: 1, userName: "test");
+
+        _client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", token);
+
         var newUser = new User
         {
             Email = "gerry@gmail.com",
@@ -55,6 +68,11 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
     [Fact]
     async Task GetUserById_When_User_Doesnt_Exists_Return_NotFound()
     {
+        var token = _jwtService.GenerateToken(userId: 1, userName: "test");
+
+        _client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", token);
+
         var response = await _client.GetAsync("user/556");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
