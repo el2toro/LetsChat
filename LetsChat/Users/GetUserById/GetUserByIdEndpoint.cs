@@ -1,4 +1,6 @@
-﻿namespace LetsChat.Users.GetUserById;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace LetsChat.Users.GetUserById;
 
 public class GetUserByIdEndpoint : ICarterModule
 {
@@ -12,6 +14,7 @@ public class GetUserByIdEndpoint : ICarterModule
         .WithDisplayName("GetUserById")
         .Produces(StatusCodes.Status200OK)
         .WithDescription("Get User By Id")
-        .WithSummary("Get User By Id");
+        .WithSummary("Get User By Id")
+        .RequireAuthorization();
     }
 }
