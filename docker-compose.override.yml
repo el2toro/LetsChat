@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  letschatdb:
+    container_name: letschatdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SwN12345678
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+      - letschatdb_data:/var/opt/mssql  # persists your DB data
+
+  letschat.api:
+    build:
+      context: .
+      dockerfile: LetsChat/Dockerfile
+    container_name: letschat.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=letschatdb;Database=LetsChat;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
+    depends_on:
+      - letschatdb
+    ports:
+      - "9003:8080"
+      - "9063:8081"
+    # REMOVE volumes for user secrets unless absolutely needed in dev
+    # These usually cause permission errors on Windows
+    # If you need HTTPS for dev:
+    # volumes:
+    #   - ./dev-certs:/https:ro
+
+volumes:
+  letschatdb_data:

@@ -7,21 +7,10 @@ public class SendMessageHandler(IMessageRepository messageRepository)
 {
     public async Task<SendMesageResult> Handle(SendMesageRequest request, CancellationToken cancellationToken)
     {
-        await messageRepository.SendMessage(MapDtoToMessage(request.Message), cancellationToken);
-        return new SendMesageResult(true);
-    }
+        var message = request.Message.Adapt<Message>();
 
-    private Message MapDtoToMessage(MessageDto messageDto)
-    {
-        return new Message
-        {
-            SenderId = messageDto.SenderId,
-            ReceiverId = messageDto.ReceiverId,
-            Content = messageDto.Content,
-            SendAt = DateTime.Now,
-            IsDeleted = messageDto.IsDeleted,
-            IsRead = messageDto.IsRead
-        };
+        await messageRepository.SendMessage(message, cancellationToken);
+        return new SendMesageResult(true);
     }
 }
 

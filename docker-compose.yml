@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  letschat:
+    image: ${DOCKER_REGISTRY-}letschat
+    build:
+      context: .
+      dockerfile: LetsChat/Dockerfile
+
+  letschatdb: 
+    image: mcr.microsoft.com/mssql/server
+
+  # letschat.api:
+  #   image: ${DOCKER_REGISTRY-}letschatapi
+  #   build:
+  #     context: .
+  #     dockerfile: LetsChat/LetsChat/Dockerfile
+
+
