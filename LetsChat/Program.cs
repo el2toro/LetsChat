@@ -5,6 +5,7 @@ using LetsChat.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -100,6 +101,12 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+
+        Log.Logger = new LoggerConfiguration()
+          .ReadFrom.Configuration(builder.Configuration)
+          .CreateLogger();
+
+        builder.Host.UseSerilog();
 
         builder.Services.AddAuthorization();
 
