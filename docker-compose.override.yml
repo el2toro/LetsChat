@@ -22,7 +22,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Server=letschatdb;Database=LetsChat;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Database=Server=letschatdb;Database=LetsChat;User ID=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
     depends_on:
       - letschatdb
     ports:
