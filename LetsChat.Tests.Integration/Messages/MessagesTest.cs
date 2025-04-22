@@ -3,6 +3,7 @@ using LetsChat.Dtos;
 using LetsChat.Messages.MarkMessageAsRead;
 using LetsChat.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -14,6 +15,14 @@ public class MessagesTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
     private readonly HttpClient _client;
     private readonly LetsChatDbContext _context;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    public class ErrorResponse
+    {
+        public string Title { get; set; }
+        public int Status { get; set; }
+        public string Detail { get; set; }
+        public string Instance { get; set; }
+    }
     public MessagesTest(CustomWebAppFactoryIntegrationTest factory)
     {
         _jsonSerializerOptions = new JsonSerializerOptions
@@ -43,6 +52,34 @@ public class MessagesTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         var response = await _client.PostAsync("message/", content);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("", 3, 4, "Message Content cannot be null or empty space")]
+    [InlineData(null, 3, 4, "Message Content cannot be null or empty space")]
+    [InlineData("some message", 0, 4, "SenderId should be greater than 0")]
+    [InlineData("some message", 3, 0, "ReceiverId should be greater than 0")]
+    async Task SendMessage_When_No_MessageContent_Throws_ValidationException
+        (string? messageContent, int senderId, int receiverId, string expected)
+    {
+        var request = new MessageDto
+        {
+            Content = messageContent,
+            SenderId = senderId,
+            ReceiverId = receiverId,
+            SendAt = DateTime.UtcNow.ToString(),
+        };
+
+        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("message/", content);
+        var json = await response.Content.ReadAsStringAsync();
+        var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, _jsonSerializerOptions);
+
+        Assert.NotNull(errorResponse);
+        Assert.Equal(nameof(ValidationException), errorResponse.Title);
+        Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)errorResponse.Status);
+        Assert.Contains(expected, errorResponse.Detail);
     }
 
     [Fact]
