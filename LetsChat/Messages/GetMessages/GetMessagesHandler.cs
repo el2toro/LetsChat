@@ -8,7 +8,7 @@ public class GetMessagesHandler(IMessageRepository messageRepository)
 {
     public async Task<GetMessagesResult> Handle(GetMessagesRequest request, CancellationToken cancellationToken)
     {
-        var result = await messageRepository.GetMessages(request.SenderId, request.ReceiverId);
+        var result = await messageRepository.GetMessages(request.SenderId, request.ReceiverId, cancellationToken);
         return new GetMessagesResult(result);
     }
 }

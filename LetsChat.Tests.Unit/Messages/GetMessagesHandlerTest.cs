@@ -38,7 +38,7 @@ public class GetMessagesHandlerTest
             },
         };
 
-        _messageRepository.Setup(x => x.GetMessages(It.IsAny<int>(), It.IsAny<int>()))
+        _messageRepository.Setup(x => x.GetMessages(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .Returns(Task.FromResult(messages.AsEnumerable()));
 
         var result = await _getMessagesHandler.Handle(new GetMessagesRequest(1, 2), CancellationToken.None);

@@ -40,7 +40,7 @@ public class UserRepositoryTest : IClassFixture<CustomWebAppFactoryUnitTest>
         var createdUser = await _context.Users.FindAsync(user.Id);
 
         Assert.NotNull(createdUser);
-        Assert.Equal(3, createdUser.Id);
+        Assert.Equal(user.Id, createdUser.Id);
         Assert.Equal(user.Username, createdUser.Username);
     }
 

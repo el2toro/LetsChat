@@ -21,17 +21,17 @@ public class MessageRepository(LetsChatDbContext dbContext)
                 throw new ArgumentNullException();
     }
 
-    public async Task<IEnumerable<Message>> GetMessages(int senderId, int receiverId)
+    public async Task<IEnumerable<Message>> GetMessages(int senderId, int receiverId, CancellationToken cancellationToken)
     {
         var messagesSender = await dbContext.Messages
             .Where(m => m.SenderId == senderId && m.ReceiverId == receiverId)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var messagesReceiver = await dbContext.Messages
             .Where(m => m.ReceiverId == senderId && m.SenderId == receiverId)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var concated = messagesSender.Concat(messagesReceiver);
 

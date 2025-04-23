@@ -2,7 +2,7 @@
 
 public interface IMessageRepository
 {
-    Task<IEnumerable<Message>> GetMessages(int senderId, int receiverId);
+    Task<IEnumerable<Message>> GetMessages(int senderId, int receiverId, CancellationToken cancellationToken);
     Task SendMessage(Message message, CancellationToken cancellationToken);
     Task<Message> GetLastMessage(int senderId, int receiverId, CancellationToken cancellationToken);
     Task<IEnumerable<Message>> MarkMessagesAsRead(int senderId, int receiverId, CancellationToken cancellationToken);
