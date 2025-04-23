@@ -8,7 +8,7 @@ public class MessageRepository(LetsChatDbContext dbContext)
             throw new MessageNotFoundException(id);
 
         dbContext.Messages.Remove(message);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Message> GetLastMessage(int senderId, int receiverId, CancellationToken cancellationToken)
@@ -17,7 +17,7 @@ public class MessageRepository(LetsChatDbContext dbContext)
             .AsNoTracking()
             .OrderBy(m => m.SendAt)
             .LastOrDefaultAsync(m => m.SenderId == senderId && m.ReceiverId == receiverId ||
-                m.SenderId == receiverId && m.ReceiverId == senderId) ??
+                m.SenderId == receiverId && m.ReceiverId == senderId, cancellationToken: cancellationToken) ??
                 throw new ArgumentNullException();
     }
 
@@ -69,7 +69,7 @@ public class MessageRepository(LetsChatDbContext dbContext)
         existingMessage.Content = message.Content;
 
         dbContext.Messages.Update(existingMessage);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return existingMessage;
     }

@@ -43,8 +43,7 @@ public class AuthenticationRepositoryTest : IClassFixture<CustomWebAppFactoryUni
         var loginDto = new LoginDto
         {
             UserName = "nonexistentuser",
-            Password = "wrongpassword",
-
+            Password = "wrongpassword"
         };
 
         var exception = await Assert.ThrowsAsync<NotFoundException>(async () =>
@@ -61,7 +60,7 @@ public class AuthenticationRepositoryTest : IClassFixture<CustomWebAppFactoryUni
             Password = "password1234",
             Email = "mymail@gmail.com",
             Name = "Test",
-            Surename = "Test 2",
+            Surename = "Test 2"
         });
 
         _dbContext.SaveChanges();

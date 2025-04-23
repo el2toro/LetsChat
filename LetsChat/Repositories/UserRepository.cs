@@ -14,7 +14,7 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
             throw new UserNotFoundException(id);
 
         dbContext.Users.Remove(user);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<User> GetUserById(int id, CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
         existingUser.Username = user.Username;
 
         dbContext.Users.Update(existingUser);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return existingUser;
     }
