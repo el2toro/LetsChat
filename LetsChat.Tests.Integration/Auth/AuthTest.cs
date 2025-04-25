@@ -1,7 +1,9 @@
 ﻿using LetsChat.Auth.Dtos;
 using LetsChat.Data;
 using LetsChat.Models;
+using LetsChat.Tests.Integration.Messages;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -63,6 +65,33 @@ public class AuthTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         var response = await _client.PostAsync("login/", content);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("", "password", "UserName is required")]
+    [InlineData(null, "password", "UserName is required")]
+    [InlineData("user", "", "Password is required")]
+    [InlineData("user", null, "Password is required")]
+    public async Task Handle_When_Invalid_Input_Throws_ValidationException
+        (string username, string password, string expectedMessage)
+    {
+        var request = new LoginDto
+        {
+            UserName = username,
+            Password = password
+        };
+
+        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("login/", content);
+
+        var json = await response.Content.ReadAsStringAsync();
+        var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, _jsonSerializerOptions);
+
+        Assert.NotNull(errorResponse);
+        Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)errorResponse.Status);
+        Assert.Contains(expectedMessage, errorResponse.Detail);
+        Assert.Equal(nameof(ValidationException), errorResponse.Title);
     }
 
     private void SeedUsers()
