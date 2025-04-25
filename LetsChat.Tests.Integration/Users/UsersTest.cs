@@ -2,10 +2,8 @@
 using LetsChat.Data;
 using LetsChat.Dtos;
 using LetsChat.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
+using LetsChat.Tests.Integration.Messages;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -99,33 +97,41 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
 
-    //TODO: Validation tests
-    [Fact]
-    async Task CreateUser_When_Email_Invalid_Return_BadRequest()
+    [Theory]
+    [InlineData("usergmail.com", "John", "Doee", "johny", "Password1", "Email is not valid")]
+    [InlineData("user@gmail.com", "Joh", "Doee", "johny", "Password1", "Name is required and should have at least 4 characters")]
+    [InlineData("user@gmail.com", "John", "Doe", "johny", "Password1", "Surename is required and should have at least 4 characters")]
+    [InlineData("user@gmail.com", "John", "Doee", "jo", "Password1", "Username is required and should have at least 4 characters")]
+    [InlineData("user@gmail.com", "John", "Doee", "johny", "mypass", "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number")]
+    async Task CreateUser_When_Invalid_Input_Return_BadRequest
+        (string email, string name, string surename, string username, string password, string expectedMessage)
     {
-        //var request = new UserDto
-        //{
-        //    Email = "usergmail.com",
-        //    Name = "New user",
-        //    Surename = "useruser",
-        //    Username = "User",
-        //    Password = "Password1",
-        //};
+        var request = new UserDto
+        {
+            Email = email,
+            Name = name,
+            Surename = surename,
+            Username = username,
+            Password = password
+        };
 
-        //var content = new StringContent(JsonSerializer.Serialize(request),
-        //    Encoding.UTF8,
-        //    "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(request),
+            Encoding.UTF8,
+            "application/json");
 
-        //var response = await _client.PostAsync("user/", content);
-        //var json = await response.Content.ReadAsStringAsync();
-        //var errorResponse = JsonSerializer.Deserialize<ValidationException>(json, _jsonSerializerOptions);
+        var response = await _client.PostAsync("user/", content);
+        var json = await response.Content.ReadAsStringAsync();
+        var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, _jsonSerializerOptions);
 
-        //Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(errorResponse);
+        Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)errorResponse.Status);
+        Assert.Contains(expectedMessage, errorResponse.Detail);
+        Assert.Equal("ValidationException", errorResponse.Title);
     }
 
 
     [Fact]
-    async Task UpdateUser_Should_Return_StatusCode_200()
+    async Task UpdateUser_Should_Return_OK()
     {
         var request = new UserDto
         {
@@ -134,7 +140,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
             Name = "Updated user",
             Surename = "User",
             Username = "user",
-            Password = "1111"
+            Password = "Password123"
         };
 
         var content = new StringContent(JsonSerializer.Serialize(request),
@@ -149,7 +155,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         Assert.NotNull(user);
         Assert.Equal(2, user.Id);
         Assert.Equal("user", user.Username);
-        Assert.Equal("1111", user.Password);
+        Assert.Equal("Password123", user.Password);
     }
 
     [Fact]
@@ -162,7 +168,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
             Name = "Updated user",
             Surename = "User",
             Username = "user",
-            Password = "1111"
+            Password = "Password123"
         };
 
         var content = new StringContent(JsonSerializer.Serialize(request),

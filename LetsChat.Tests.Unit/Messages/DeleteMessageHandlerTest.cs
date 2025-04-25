@@ -1,5 +1,6 @@
 ﻿using LetsChat.Intefaces;
 using LetsChat.Messages.DeleteMessage;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;
@@ -7,11 +8,13 @@ namespace LetsChat.Tests.Unit.Messages;
 public class DeleteMessageHandlerTest
 {
     Mock<IMessageRepository> _messageRepository;
+    Mock<ILogger<DeleteMessageHandler>> _logger;
     DeleteMessageHandler _deleteMessageHandler;
     public DeleteMessageHandlerTest()
     {
         _messageRepository = new Mock<IMessageRepository>();
-        _deleteMessageHandler = new DeleteMessageHandler(_messageRepository.Object);
+        _logger = new Mock<ILogger<DeleteMessageHandler>>();
+        _deleteMessageHandler = new DeleteMessageHandler(_messageRepository.Object, _logger.Object);
     }
 
     [Fact]

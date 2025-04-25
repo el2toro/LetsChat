@@ -2,6 +2,7 @@
 using LetsChat.Intefaces;
 using LetsChat.Messages.UpdateMessage;
 using LetsChat.Models;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;
@@ -9,11 +10,13 @@ namespace LetsChat.Tests.Unit.Messages;
 public class UpdateMessageHandlerTest
 {
     Mock<IMessageRepository> _messageRepository;
+    Mock<ILogger<UpdateMessageHandler>> _logger;
     UpdateMessageHandler _updateMessageHandler;
     public UpdateMessageHandlerTest()
     {
         _messageRepository = new Mock<IMessageRepository>();
-        _updateMessageHandler = new UpdateMessageHandler(_messageRepository.Object);
+        _logger = new Mock<ILogger<UpdateMessageHandler>>();
+        _updateMessageHandler = new UpdateMessageHandler(_messageRepository.Object, _logger.Object);
     }
 
     [Fact]

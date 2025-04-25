@@ -1,6 +1,7 @@
 ﻿using LetsChat.Intefaces;
 using LetsChat.Messages.GetLastMessage;
 using LetsChat.Models;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;
@@ -8,11 +9,13 @@ namespace LetsChat.Tests.Unit.Messages;
 public class GetLastMessageHandlerTest
 {
     Mock<IMessageRepository> _messageRepository;
+    Mock<ILogger<GetLastMessageHandler>> _logger;
     GetLastMessageHandler _getLastMessageHandler;
     public GetLastMessageHandlerTest()
     {
         _messageRepository = new Mock<IMessageRepository>();
-        _getLastMessageHandler = new GetLastMessageHandler(_messageRepository.Object);
+        _logger = new Mock<ILogger<GetLastMessageHandler>>();
+        _getLastMessageHandler = new GetLastMessageHandler(_messageRepository.Object, _logger.Object);
     }
 
     [Fact]

@@ -6,7 +6,7 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
 {
     public CreateUserRequestValidator()
     {
-        string message = "is required, should have at least 4 characters";
+        string message = "is required and should have at least 4 characters";
 
         RuleFor(x => x.UserDto)
             .NotNull()

@@ -10,8 +10,8 @@ public class UpdateMessageHandler(IMessageRepository messageRepository, ILogger<
     {
         logger.LogInformation($"UpdateMessageHandler called with MessageDto: {request.MessageDto}");
 
-        var result = await messageRepository.UpdateMessage(request.Adapt<Message>(), cancellationToken);
+        var result = await messageRepository.UpdateMessage(request.MessageDto.Adapt<Message>(), cancellationToken);
 
-        return new UpdateMessageResult(request.Adapt<MessageDto>());
+        return new UpdateMessageResult(result.Adapt<MessageDto>());
     }
 }

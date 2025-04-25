@@ -1,6 +1,7 @@
 ﻿using LetsChat.Intefaces;
 using LetsChat.Messages.MarkMessageAsRead;
 using LetsChat.Models;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Messages;
@@ -8,11 +9,13 @@ namespace LetsChat.Tests.Unit.Messages;
 public class MarkMessageAsReadHandlerTest
 {
     Mock<IMessageRepository> _messageRepository;
+    Mock<ILogger<MarkMessagesAsReadHandler>> _logger;
     MarkMessagesAsReadHandler _markMessagesAsReadHandler;
     public MarkMessageAsReadHandlerTest()
     {
         _messageRepository = new Mock<IMessageRepository>();
-        _markMessagesAsReadHandler = new MarkMessagesAsReadHandler(_messageRepository.Object);
+        _logger = new Mock<ILogger<MarkMessagesAsReadHandler>>();
+        _markMessagesAsReadHandler = new MarkMessagesAsReadHandler(_messageRepository.Object, _logger.Object);
     }
 
     [Fact]
