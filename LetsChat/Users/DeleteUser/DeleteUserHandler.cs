@@ -2,6 +2,15 @@
 
 public record DeleteUserRequest(int UserId) : IRequest<DeleteUserResult>;
 public record DeleteUserResult(bool IsSuccess);
+
+public class DeleteUserRequestVAlidator : AbstractValidator<DeleteUserRequest>
+{
+    public DeleteUserRequestVAlidator()
+    {
+        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
+        RuleFor(x => x.UserId).GreaterThan(0).WithMessage("UserId must be greater than 0");
+    }
+}
 public class DeleteUserHandler(IUserRepository userRepository, ILogger<DeleteUserHandler> logger)
     : IRequestHandler<DeleteUserRequest, DeleteUserResult>
 {

@@ -2,22 +2,16 @@
 
 public record UpdateMessageRequest(MessageDto MessageDto) : IRequest<UpdateMessageResult>;
 public record UpdateMessageResult(MessageDto MessageDto);
-public class UpdateMessageHandler(IMessageRepository messageRepository)
+
+public class UpdateMessageHandler(IMessageRepository messageRepository, ILogger<UpdateMessageHandler> logger)
     : IRequestHandler<UpdateMessageRequest, UpdateMessageResult>
 {
     public async Task<UpdateMessageResult> Handle(UpdateMessageRequest request, CancellationToken cancellationToken)
     {
-        var message = new Message
-        {
-            Id = request.MessageDto.Id,
-            Content = request.MessageDto.Content
-        };
+        logger.LogInformation($"UpdateMessageHandler called with MessageDto: {request.MessageDto}");
 
-        var result = await messageRepository.UpdateMessage(message, cancellationToken);
+        var result = await messageRepository.UpdateMessage(request.Adapt<Message>(), cancellationToken);
 
-        //TODO: add proper mapping
-        request.MessageDto.Content = request.MessageDto.Content;
-
-        return new UpdateMessageResult(request.MessageDto);
+        return new UpdateMessageResult(request.Adapt<MessageDto>());
     }
 }

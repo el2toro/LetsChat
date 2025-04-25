@@ -33,8 +33,7 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
             Name = user.Name,
             Id = user.Id,
             Password = user.Password,
-            Surename = user.Surename,
-
+            Surename = user.Surename
         })
         .AsNoTracking()
         .ToListAsync();
