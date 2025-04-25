@@ -5,6 +5,7 @@ using LetsChat.Exceptions;
 using LetsChat.Intefaces;
 using LetsChat.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace LetsChat.Tests.Unit.Auth.Login;
@@ -14,11 +15,13 @@ public class LoginHandlerTest : IClassFixture<CustomWebAppFactoryUnitTest>
     private readonly Mock<IAuthenticationRepository> _authenticationRepository;
     private readonly LoginHandler _loginHandler;
     private readonly IJwtService _jwtService;
+    private readonly Mock<ILogger<LoginHandler>> _logger;
     public LoginHandlerTest(CustomWebAppFactoryUnitTest factory)
     {
         _authenticationRepository = new Mock<IAuthenticationRepository>();
         _jwtService = factory.Services.CreateScope().ServiceProvider.GetRequiredService<IJwtService>();
-        _loginHandler = new LoginHandler(_authenticationRepository.Object, _jwtService);
+        _logger = new Mock<ILogger<LoginHandler>>();
+        _loginHandler = new LoginHandler(_authenticationRepository.Object, _jwtService, _logger.Object);
     }
 
     [Fact]
@@ -49,7 +52,7 @@ public class LoginHandlerTest : IClassFixture<CustomWebAppFactoryUnitTest>
     }
 
     [Fact]
-    public async Task Handles_When_User_Not_Exists_Throws_UserNotFoundException()
+    public async Task Handle_When_User_Not_Exists_Throws_UserNotFoundException()
     {
         var loginDto = new LoginDto
         {
@@ -62,7 +65,7 @@ public class LoginHandlerTest : IClassFixture<CustomWebAppFactoryUnitTest>
 
         _authenticationRepository.Setup(repo => repo.Login(loginDto)).ReturnsAsync(user);
 
-        var result =  await Assert.ThrowsAsync<UserNotFoundException>(async () =>
+        var result = await Assert.ThrowsAsync<UserNotFoundException>(async () =>
         {
             await _loginHandler.Handle(new LoginQuery(loginDto), CancellationToken.None);
         });

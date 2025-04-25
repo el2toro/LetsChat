@@ -1,4 +1,5 @@
-﻿using LetsChat.Auth.Services;
+﻿using FluentValidation;
+using LetsChat.Auth.Services;
 using LetsChat.Data;
 using LetsChat.Dtos;
 using LetsChat.Models;
@@ -126,7 +127,7 @@ public class UsersTest : IClassFixture<CustomWebAppFactoryIntegrationTest>
         Assert.NotNull(errorResponse);
         Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode)errorResponse.Status);
         Assert.Contains(expectedMessage, errorResponse.Detail);
-        Assert.Equal("ValidationException", errorResponse.Title);
+        Assert.Equal(nameof(ValidationException), errorResponse.Title);
     }
 
 
