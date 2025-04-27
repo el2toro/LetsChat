@@ -8,7 +8,7 @@ public class CreateUserHandler(IUserRepository userRepository, ILogger<CreateUse
 {
     public async Task<CreateUserResult> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("CreateUserHandler called with UserDto: {@UserDto}", request.UserDto);
+        logger.LogInformation($"CreateUserHandler called with UserDto: {request.UserDto}");
 
         var user = request.UserDto.Adapt<User>();
 

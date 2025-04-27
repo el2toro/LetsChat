@@ -8,12 +8,12 @@ public class SendMessageEndpoint : ICarterModule
         app.MapPost("/message", async ([FromBody] MessageDto message, ISender sender) =>
         {
             await sender.Send(new SendMesageRequest(message));
-            //TODO: adapt result
             return Results.Created();
         })
         .WithName("SendMessage")
         .Produces<SendMessageResponse>()
         .WithDescription("Send Message")
-        .WithSummary("Send Message");
+        .WithSummary("Send Message")
+        .RequireRateLimiting("fixed");
     }
 }

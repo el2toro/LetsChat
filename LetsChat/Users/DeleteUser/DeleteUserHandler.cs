@@ -16,7 +16,7 @@ public class DeleteUserHandler(IUserRepository userRepository, ILogger<DeleteUse
 {
     public async Task<DeleteUserResult> Handle(DeleteUserRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("DeleteUserHandler called with UserId: {UserId}", request.UserId);
+        logger.LogInformation($"DeleteUserHandler called with UserId: {request.UserId}");
 
         await userRepository.DeleteUser(request.UserId, cancellationToken);
         return new DeleteUserResult(true);

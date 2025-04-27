@@ -1,5 +1,5 @@
 ﻿namespace LetsChat.Repositories;
-public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsChatDbContext> options)
+public class UserRepository(IMessageRepository messageRepository, LetsChatDbContext dbContext, DbContextOptions<LetsChatDbContext> options)
     : IUserRepository
 {
     public async Task CreateUser(User user, CancellationToken cancellationToken)
@@ -23,9 +23,9 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
             throw new UserNotFoundException(id);
     }
 
-    public async Task<IEnumerable<UserDto>> GetUsers(CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserDto>> GetUsers(int senderId, CancellationToken cancellationToken)
     {
-        return await dbContext.Users.Select(user => new UserDto
+        var users = await dbContext.Users.Select(user => new UserDto
         {
             Username = user.Username,
             Email = user.Email,
@@ -37,6 +37,17 @@ public class UserRepository(LetsChatDbContext dbContext, DbContextOptions<LetsCh
         })
         .AsNoTracking()
         .ToListAsync();
+
+        foreach (var user in users)
+        {
+            if (user.Id != senderId)
+            {
+                var lastMessage = await messageRepository.GetLastMessage(senderId, user.Id, cancellationToken);
+                user.LastMessage = lastMessage.Content;
+            }
+        }
+
+        return users;
     }
 
     public async Task<User> UpdateUser(User user, CancellationToken cancellationToken)

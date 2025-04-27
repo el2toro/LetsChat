@@ -14,6 +14,13 @@ public class LetsChatDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>().HasKey(x => x.Id);
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
 
         modelBuilder.Entity<Message>().HasKey(x => x.Id);
         modelBuilder.Entity<Message>()

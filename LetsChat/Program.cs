@@ -42,9 +42,11 @@ public class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", builder =>
-                builder.AllowAnyMethod()
-                       .AllowAnyHeader()
-                       .AllowAnyOrigin());
+                builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials());
         });
 
         builder.Services.AddSignalR();
@@ -55,7 +57,7 @@ public class Program
             // Define rate limiting policies here
             options.AddFixedWindowLimiter(policyName: "fixed", options =>
             {
-                options.PermitLimit = 5; // Maximum number of requests allowed
+                options.PermitLimit = 50; // Maximum number of requests allowed
                 options.Window = TimeSpan.FromMinutes(1); // Time window for the limit
                 options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                 options.QueueLimit = 2;
@@ -67,9 +69,9 @@ public class Program
                     partitionKey: context.Connection.RemoteIpAddress?.ToString()!, // Limit by IP address
                     factory: partition => new FixedWindowRateLimiterOptions
                     {
-                        Window = TimeSpan.FromSeconds(30),
-                        PermitLimit = 10,
-                        QueueLimit = 1,
+                        Window = TimeSpan.FromMinutes(1),
+                        PermitLimit = 50,
+                        QueueLimit = 2,
                         AutoReplenishment = true
                     }));
 

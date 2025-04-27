@@ -7,7 +7,7 @@ public class UpdateUserHandler(IUserRepository userRepository, ILogger<UpdateUse
 {
     public async Task<UpdateUserResult> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("UpdateUserHandler called with UserDto: {UserDto}", request.UserDto);
+        logger.LogInformation($"UpdateUserHandler called with UserDto: {request.UserDto}");
 
         var user = request.UserDto.Adapt<User>();
 

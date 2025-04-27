@@ -8,7 +8,7 @@ public class GetUserByIdHandler(IUserRepository userRepository, ILogger<GetUserB
 {
     public async Task<GetUserByIdResult> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("GetUserByIdHandler called with UserId: {UserId}", request.UserId);
+        logger.LogInformation($"GetUserByIdHandler called with UserId: {request.UserId}");
 
         var user = await userRepository.GetUserById(request.UserId, cancellationToken);
 

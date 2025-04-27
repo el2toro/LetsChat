@@ -9,6 +9,11 @@ public class SendMessageHandler(IMessageRepository messageRepository, ILogger<Se
     {
         logger.LogInformation($"SendMessageHandler called with MessageDto: {request.Message}");
 
+        request.Message.SendAt = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
+
+        TypeAdapterConfig<MessageDto, Message>.NewConfig()
+          .Map(dest => dest.SendAt, src => DateTime.Parse(src.SendAt));
+
         var message = request.Message.Adapt<Message>();
 
         await messageRepository.SendMessage(message, cancellationToken);
